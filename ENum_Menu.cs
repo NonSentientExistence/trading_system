@@ -1,3 +1,5 @@
+//enums for menu
+
 namespace App;
 
 public enum EMenu
@@ -7,6 +9,7 @@ public enum EMenu
   User,
   ViewTrades,
   PendingTrades,
+  Exit,
   Test,
 
 }

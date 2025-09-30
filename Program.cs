@@ -99,6 +99,20 @@ while (is_running)
         menu_choice = EMenu.Main;
       }
       break;
+
+    //Menu for putting an item up for trade
+    case EMenu.NewTrade:
+      {
+        int i = 1;
+        Console.WriteLine("What would you like to trade?");
+        foreach (Item item in items)
+        {
+          if (user_logged_in.Email == item.Owner)
+            Console.WriteLine($"Name: item.Name \n Description: item.description");
+        }
+
+      }
+
     //Hidden test menu
     case EMenu.Test:
       {

@@ -5,6 +5,7 @@ List<IUser> users = new List<IUser>();
 users.Add(new User("User 1", "user1@e", "pass"));
 users.Add(new User("User 2", "user2@e", "pass"));
 
+
 //create variable for while loop
 bool is_running = true;
 
@@ -61,11 +62,7 @@ while (is_running)
             }
           }
         }
-        if (user_logged_in != null)
-        {
-          menu_choice = EMenu.Main;
-        }
-
+        menu_choice = EMenu.Main;
       }
 
       break;

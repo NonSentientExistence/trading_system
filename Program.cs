@@ -1,6 +1,6 @@
 ﻿using App;
 
-List<IUser> users = new List<IUser>();
+List<User> users = new List<User>();
 
 users.Add(new User("User 1", "user1@e", "pass"));
 users.Add(new User("User 2", "user2@e", "pass"));
@@ -24,7 +24,7 @@ bool is_running = true;
 
 // define and set the variable for which menu to use and user_logged_in to false default.
 EMenu menu_choice = EMenu.Main;
-IUser? user_logged_in = null;
+User? user_logged_in = null;
 
 //Declare for use on user chosen menus
 string user_menu_choice;
@@ -51,7 +51,7 @@ while (is_running)
         if (user_logged_in != null)
         {
           //Write line for menu choices on main menu
-          Console.WriteLine("Menu: \n\n1.Check Inventory \n2. New trade \n3. Pending trades \n4. Trade history");
+          Console.WriteLine("Menu: \n\n1. Check Inventory \n2. New trade \n3. Pending trades \n4. Trade history");
           //Sets user chosen input as user_menu choice. Switch to set menu_choice to send user to correct menu
           user_menu_choice = Console.ReadLine();
           switch (user_menu_choice) { case "1": { menu_choice = EMenu.Inventory; } break; case "2": { menu_choice = EMenu.NewTrade; } break; case "9": { menu_choice = EMenu.Test; } break; }
@@ -72,7 +72,7 @@ while (is_running)
           string user_password = Console.ReadLine();
 
           //loops available users, matching email and password.
-          foreach (IUser user in users)
+          foreach (User user in users)
           {
             if (user.TryLogin(user_email, user_password))
             {
@@ -85,10 +85,28 @@ while (is_running)
       }
 
       break;
+
+    //Inventory menu. Displays items currently owned by the current user.
+    case EMenu.Inventory:
+      {
+        foreach (Item item in items)
+        {
+          if (user_logged_in.Email == item.Owner)
+            Console.WriteLine(item.Name);
+        }
+        Console.WriteLine("\nPress enter to return to main menu...");
+        Console.ReadLine();
+        menu_choice = EMenu.Main;
+      }
+      break;
     //Hidden test menu
     case EMenu.Test:
       {
+        //Below is only for tests
         Console.WriteLine("Sooooo, you need to test stuff?");
+        Console.WriteLine(user_logged_in.Email);
+
+        Console.ReadLine();
 
       }
       break;

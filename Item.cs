@@ -4,9 +4,9 @@ namespace App;
 
 public class Item
 {
-  string Name;
-  string Description;
-  string Owner;
+  public string Name;
+  public string Description;
+  public string Owner;
 
 
   public Item(string name, string owner, string description)

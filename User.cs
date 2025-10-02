@@ -6,7 +6,7 @@ public class User
   //email will be used for login unique id. Username for display purpose.
   public string Username;
   public string Email;
-  string _password;
+  public string _password;
 
   public User(string username, string email, string password)
   {

@@ -65,25 +65,65 @@ while (is_running)
         //Check if user is logged in
         if (user_logged_in == null)
         {
-          Console.WriteLine("Please enter your email address and password!");
-          Console.WriteLine("Email: ");
-          string user_email = Console.ReadLine();
-          Console.WriteLine("Password: ");
-          string user_password = Console.ReadLine();
+          Console.WriteLine("Press enter to login, press any key to register...");
+          user_menu_choice = Console.ReadLine();
 
-          //loops available users, matching email and password.
-          foreach (User user in users)
+          //Check if user_menu_choice is null or empty, true then proceed to login
+          if (user_menu_choice == null | user_menu_choice == "")
           {
-            if (user.TryLogin(user_email, user_password))
+            Console.WriteLine("Please enter your email address and password to login!");
+            Console.WriteLine("Email: ");
+            string user_email = Console.ReadLine();
+            Console.WriteLine("Password: ");
+            string user_password = Console.ReadLine();
+            //loops available users, matching email and password.
+            foreach (User user in users)
             {
-              user_logged_in = user;
-              break;
+              if (user.TryLogin(user_email, user_password))
+              {
+                user_logged_in = user;
+                break;
+              }
             }
           }
+          else
+          {
+            Console.WriteLine("Please enter your email address, preferred username and a password to register!");
+            Console.WriteLine("Email: ");
+            string user_email = Console.ReadLine();
+            Console.WriteLine("Username: ");
+            string user_username = Console.ReadLine();
+            Console.WriteLine("Password: ");
+            string user_password = Console.ReadLine();
+            //Ask user for confirmation
+
+            Console.WriteLine("\nPlease confirm that your registration info is correct");
+            Console.WriteLine($"Email: {user_email} \nUsername: {user_username} \nPassword:{user_password}");
+            Console.WriteLine("Press enter to register, press any other key to re-enter details");
+            user_menu_choice = Console.ReadLine();
+
+            //Adds the user if user_menu_choic is null or "" and then logs in the user.
+            if (user_menu_choice == null | user_menu_choice == "")
+            {
+              users.Add(new User(user_username, user_email, user_password));
+              foreach (User user in users)
+              {
+                if (user.TryLogin(user_email, user_password))
+                {
+                  user_logged_in = user;
+                  break;
+                }
+              }
+            }
+
+
+
+
+          }
+
         }
         menu_choice = EMenu.Main;
       }
-
       break;
 
     //Inventory menu. Displays items currently owned by the current user.
@@ -112,7 +152,7 @@ while (is_running)
         }
 
       }
-
+      break;
     //Hidden test menu
     case EMenu.Test:
       {

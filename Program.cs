@@ -211,8 +211,9 @@ while (is_running)
     case EMenu.Test:
     {
       //Below is only for tests
-      Console.WriteLine("Sooooo, you need to test stuff?");
-      Console.WriteLine(user_logged_in.Email);
+      Console.WriteLine("Sooooo, you need to test stuff?\n\n");
+
+      FileFunction.FileRead("u");
 
       Console.ReadLine();
 

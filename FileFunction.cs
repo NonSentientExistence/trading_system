@@ -19,21 +19,38 @@ public class FileFunction
     if (type == "u")
     {
       //Writes data to file
-      File.AppendAllText(Path.Combine("Data", "users.txt"), data);
+      File.AppendAllText(Path.Combine("Data", "users.csv"), data);
     }
     if (type == "i")
     {
       //Writes data to file
-      File.AppendAllText(Path.Combine("Data", "items.txt"), data);
+      File.AppendAllText(Path.Combine("Data", "items.csv"), data);
 
     }
     if (type == "l")
     {
-      File.AppendAllText(Path.Combine("Data", "log.txt"), data);
+      File.AppendAllText(Path.Combine("Data", "log.csv"), data);
     }
   }
 
-  
+  //Takes type of data to return as parameter, returns requested data from file.
+  public static void FileRead(string type)
+  {
+    //Check if the file exists
+    if (type == "u")
+    {
+      if (!File.Exists(Path.Combine("Data", "users.csv")))
+
+      {
+        Console.WriteLine("No users has been added");
+        Console.ReadLine();
+        return;
+      }
+      List<User> users = new List<User>();
+      string[] users_string_from_file = File.ReadAllLines(Path.Combine("Data", "users.csv"));
+      
+    }
+  }
 
 
 }

@@ -7,6 +7,7 @@ public enum EMenu
   Main,
   Login,
   User,
+  NewItem,
   Inventory,
   NewTrade,
   ViewTrades,

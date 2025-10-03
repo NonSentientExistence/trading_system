@@ -51,10 +51,10 @@ while (is_running)
         if (user_logged_in != null)
         {
           //Write line for menu choices on main menu
-          Console.WriteLine("Menu: \n\n1. Check Inventory \n2. New trade \n3. Pending trades \n4. Trade history");
+          Console.WriteLine("Menu: \n\n1. Check Inventory \n2. Add Item \n3. New trade \n4. Pending trades \n5. Trade history");
           //Sets user chosen input as user_menu choice. Switch to set menu_choice to send user to correct menu
           user_menu_choice = Console.ReadLine();
-          switch (user_menu_choice) { case "1": { menu_choice = EMenu.Inventory; } break; case "2": { menu_choice = EMenu.NewTrade; } break; case "9": { menu_choice = EMenu.Test; } break; }
+          switch (user_menu_choice) { case "1": { menu_choice = EMenu.Inventory; } break; case "2": { menu_choice = EMenu.NewItem; } break; case "3": { menu_choice = EMenu.NewTrade; } break; case "9": { menu_choice = EMenu.Test; } break; }
         }
 
       }
@@ -102,10 +102,11 @@ while (is_running)
             Console.WriteLine("Press enter to register, press any other key to re-enter details");
             user_menu_choice = Console.ReadLine();
 
-            //Adds the user if user_menu_choic is null or "" and then logs in the user.
+            //Adds the user if user_menu_choice is null or "" and then logs in the user.
             if (user_menu_choice == null | user_menu_choice == "")
             {
               users.Add(new User(user_username, user_email, user_password));
+
               foreach (User user in users)
               {
                 if (user.TryLogin(user_email, user_password))
@@ -114,6 +115,8 @@ while (is_running)
                   break;
                 }
               }
+              // Call FileWrite method to add user to text file
+              FileFunction.FileWrite($"{user_username};{user_email};{user_password}", "u");
             }
 
 

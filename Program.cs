@@ -40,6 +40,9 @@ while (is_running)
     //main menu and default when loading program
     case EMenu.Main:
       {
+        //ensure user_menu_choice var is null if previously used
+        user_menu_choice = null;
+
         //Just for a pause in the main menu. Might remove later
         Console.WriteLine("Welcome to the main menu!");
         Console.ReadLine();
@@ -62,6 +65,9 @@ while (is_running)
     // Login menu, if user not logged in then menu_choice will be set to EMenu.Login
     case EMenu.Login:
       {
+        //ensure user_menu_choice var is null if previously used
+        user_menu_choice = null;
+
         //Check if user is logged in
         if (user_logged_in == null)
         {
@@ -88,6 +94,9 @@ while (is_running)
           }
           else
           {
+            //ensure user_menu_choice var is null if previously used
+            user_menu_choice = null;
+
             Console.WriteLine("Please enter your email address, preferred username and a password to register!");
             Console.WriteLine("Email: ");
             string user_email = Console.ReadLine();
@@ -143,38 +152,60 @@ while (is_running)
       }
       break;
 
+    //Menu for user to create new item
+    case EMenu.NewItem:
+
+      //ensure user_menu_choice var is null if previously used
+      user_menu_choice = null;
+
+      //Asks user for item info and sets it to variables
+      Console.WriteLine("Please provide required information on item to add inventory")
+      Console.Write("Name: ")
+      string user_item_name = Console.ReadLine();
+      Console.Write("Description: ")
+      string user_item_description = Console.ReadLine();
+
+      Console.WriteLine("\nIs the details for the item correct?");
+      Console.WriteLine($"Name: {user_item_name}\nDescription: {user_item_description}\n")
+      Console.WriteLine("Press enter to add item, press any key to abort...")
+      user_menu_choice = Console.ReadLine
+      if ()
+
+
+
+
     //Menu for putting an item up for trade
     case EMenu.NewTrade:
-      {
-        int i = 1;
-        Console.WriteLine("What would you like to trade?");
-        foreach (Item item in items)
-        {
-          if (user_logged_in.Email == item.Owner)
-            Console.WriteLine($"Name: item.Name \n Description: item.description");
+          {
+            int i = 1;
+            Console.WriteLine("What would you like to trade?");
+            foreach (Item item in items)
+            {
+              if (user_logged_in.Email == item.Owner)
+                Console.WriteLine($"Name: item.Name \n Description: item.description");
+            }
+
+          }
+          break;
+        //Hidden test menu
+        case EMenu.Test:
+          {
+            //Below is only for tests
+            Console.WriteLine("Sooooo, you need to test stuff?");
+            Console.WriteLine(user_logged_in.Email);
+
+            Console.ReadLine();
+
+          }
+          break;
+        //Exit menu
+        case EMenu.Exit:
+          {
+            Console.WriteLine("Thank you for trading! Press any key to exit...");
+            Console.ReadLine();
+            is_running = false;
+          }
+          break;
         }
 
-      }
-      break;
-    //Hidden test menu
-    case EMenu.Test:
-      {
-        //Below is only for tests
-        Console.WriteLine("Sooooo, you need to test stuff?");
-        Console.WriteLine(user_logged_in.Email);
-
-        Console.ReadLine();
-
-      }
-      break;
-    //Exit menu
-    case EMenu.Exit:
-      {
-        Console.WriteLine("Thank you for trading! Press any key to exit...");
-        Console.ReadLine();
-        is_running = false;
-      }
-      break;
   }
-
-}

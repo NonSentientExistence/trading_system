@@ -12,8 +12,8 @@ public class Item
   public Item(string name, string description, string owner)
   {
     Name = name;
-    Owner = owner;
     Description = description;
+    Owner = owner;
 
   }
 }

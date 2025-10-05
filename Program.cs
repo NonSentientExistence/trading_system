@@ -17,7 +17,7 @@ items.Add(new Item("Armour", "Good if you're gonna take a beating", "user1@e"));
 items.Add(new Item("Car", "If you don't wanna walk or if you're american", "user2@e"));
 items.Add(new Item("Dog", "You don't need friends if you have a dog", "user1@e"));
 items.Add(new Item("Shoes", "Useful if you couldn't afford the car", "user1@e"));
-items.Add(new Item("Scepter of god", "Do want you want", "a"));
+items.Add(new Item("Scepter of god", "Do whatever you want", "a"));
 
 //create variable for while loop
 bool is_running = true;
@@ -125,7 +125,7 @@ while (is_running)
             //ensure user_menu_choice var is null if previously used
             user_menu_choice = null;
 
-            Console.WriteLine("Please enter your email address, preferred username and a password to register!");
+            Console.WriteLine("Please enter email, choose username and password to register!");
             Console.WriteLine("Email: ");
             string user_email = Console.ReadLine();
             Console.WriteLine("Username: ");
@@ -189,8 +189,17 @@ while (is_running)
     //Inventory menu. Displays items currently owned by the current user.
     case EMenu.Inventory:
     {
+        //If items file exists, proceed to execute display of items.
         if (File.Exists(Path.Combine("Data", "items.csv")))
         {
+          string[] items_string_from_file = File.ReadAllLines(Path.Combine("Data", "items.csv"));
+          items.Clear();
+          foreach (string item in items_string_from_file)
+          {
+            string[] split_item_data = item.Split(';');
+            items.Add(new Item(split_item_data[0], split_item_data[1], split_item_data[2]));
+          }
+
           //Counter for items
           int item_count = 0;
           foreach (Item item in items)
@@ -203,6 +212,7 @@ while (is_running)
           }
         }
         
+        //If items files doens't exist, display no items to user.
         if (!File.Exists(Path.Combine("Data", "items.csv")))
         {
           Console.WriteLine("You have no items");

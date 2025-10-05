@@ -1,11 +1,11 @@
-//enums for trade status
-
 namespace App;
 
-public enum ETradeStatus
+//enums for trade status
+
+public enum ENum_TradeStatus
 {
-  pending,
-  accepted,
-  rejected
+  Pending,
+  Accepted,
+  Rejected
 }
 

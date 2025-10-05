@@ -6,6 +6,8 @@ public enum EMenu
 {
   Main,
   Login,
+  Logout,
+  Register,
   User,
   NewItem,
   Inventory,
@@ -14,5 +16,6 @@ public enum EMenu
   PendingTrades,
   Exit,
   Test,
+  AddTestData
 
 }

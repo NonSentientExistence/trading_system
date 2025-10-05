@@ -10,14 +10,14 @@ users.Add(new User("a", "a", "a"));
 
 List<Item> items = new List<Item>();
 
-items.Add(new Item("Shovel", "user1@e", "Great for digging"));
-items.Add(new Item("Horse", "user2@e", "Klad Hest"));
-items.Add(new Item("MedPack", "user2@e", "Heals damage"));
-items.Add(new Item("Armour", "user1@e", "Good if you're gonna take a beating"));
-items.Add(new Item("Car", "user2@e", "If you don't wanna walk or if you're american"));
-items.Add(new Item("Dog", "user1@e", "You don't need friends if you have a dog"));
-items.Add(new Item("Shoes", "user1@e", "Useful if you couldn't afford the car"));
-items.Add(new Item("Scepter of god", "a", "Do want you want"));
+items.Add(new Item("Shovel", "Great for digging", "user1@e"));
+items.Add(new Item("Horse", "Klad Hest", "user2@e"));
+items.Add(new Item("MedPack", "Heals damage", "user2@e"));
+items.Add(new Item("Armour", "Good if you're gonna take a beating", "user1@e"));
+items.Add(new Item("Car", "If you don't wanna walk or if you're american", "user2@e"));
+items.Add(new Item("Dog", "You don't need friends if you have a dog", "user1@e"));
+items.Add(new Item("Shoes", "Useful if you couldn't afford the car", "user1@e"));
+items.Add(new Item("Scepter of god", "Do want you want", "a"));
 
 //create variable for while loop
 bool is_running = true;
@@ -74,47 +74,30 @@ while (is_running)
         Console.WriteLine("Press enter to login, press any key to register...");
         user_menu_choice = Console.ReadLine();
 
-        //Check if user_menu_choice is null or empty, true then proceed to login
-        if (user_menu_choice == null | user_menu_choice == "")
-        {
-          Console.WriteLine("Please enter your email address and password to login!");
-          Console.WriteLine("Email: ");
-          string user_email = Console.ReadLine();
-          Console.WriteLine("Password: ");
-          string user_password = Console.ReadLine();
-          //loops available users, matching email and password.
-          foreach (User user in users)
-          {
-            if (user.TryLogin(user_email, user_password))
-            {
-              user_logged_in = user;
-              break;
-            }
-          }
-        }
-        else
-        {
-          //ensure user_menu_choice var is null if previously used
-          user_menu_choice = null;
-
-          Console.WriteLine("Please enter your email address, preferred username and a password to register!");
-          Console.WriteLine("Email: ");
-          string user_email = Console.ReadLine();
-          Console.WriteLine("Username: ");
-          string user_username = Console.ReadLine();
-          Console.WriteLine("Password: ");
-          string user_password = Console.ReadLine();
-          //Ask user for confirmation
-
-          Console.WriteLine("\nPlease confirm that your registration info is correct");
-          Console.WriteLine($"Email: {user_email} \nUsername: {user_username} \nPassword:{user_password}");
-          Console.WriteLine("Press enter to register, press any other key to re-enter details");
-          user_menu_choice = Console.ReadLine();
-
-          //Adds the user if user_menu_choice is null or "" and then logs in the user.
+          //Login, Check if user_menu_choice is null or empty, true then proceed to login
           if (user_menu_choice == null | user_menu_choice == "")
           {
-            users.Add(new User(user_username, user_email, user_password));
+            Console.WriteLine("Please enter your email address and password to login!");
+            Console.WriteLine("Email: ");
+            string user_email = Console.ReadLine();
+            Console.WriteLine("Password: ");
+            string user_password = Console.ReadLine();
+
+            if (!File.Exists(Path.Combine("Data", "users.csv")))
+            {
+              Console.WriteLine("No users has been added");
+              Console.ReadLine();
+            }
+
+            
+            string[] users_string_from_file = File.ReadAllLines(Path.Combine("Data", "users.csv"));
+
+            foreach (string user in users_string_from_file)
+            {
+              string[] split_user_data = user.Split(';');
+              users.Add(new User(split_user_data[0], split_user_data[1], split_user_data[2]));
+            }
+            
 
             foreach (User user in users)
             {
@@ -124,14 +107,79 @@ while (is_running)
                 break;
               }
             }
-            // Call FileWrite method to add user to text file
-            FileFunction.FileWrite($"{user_username};{user_email};{user_password}", "u");
+
+            /*
+                  foreach (User user in users)
+                  {
+                    if (user.TryLogin(user_email, user_password))
+                    {
+                      user_logged_in = user;
+                      break;
+                    }
+                  }
+                */
           }
+          //Register as new user if input wasn't null or ""
+          else
+          {
+            //ensure user_menu_choice var is null if previously used
+            user_menu_choice = null;
+
+            Console.WriteLine("Please enter your email address, preferred username and a password to register!");
+            Console.WriteLine("Email: ");
+            string user_email = Console.ReadLine();
+            Console.WriteLine("Username: ");
+            string user_username = Console.ReadLine();
+            Console.WriteLine("Password: ");
+            string user_password = Console.ReadLine();
+            //Ask user for confirmation
+
+            Console.WriteLine("\nPlease confirm that your registration info is correct");
+            Console.WriteLine($"Email: {user_email} \nUsername: {user_username} \nPassword:{user_password}");
+            Console.WriteLine("Press enter to register, press any other key to re-enter details");
+            user_menu_choice = Console.ReadLine();
+
+            //Adds the user if user_menu_choice is null or "" and then logs in the user.
+            if (user_menu_choice == null | user_menu_choice == "")
+            {
+              //users.Add(new User(user_username, user_email, user_password));
+
+              //Check if Data directory exists, if ! then create Data dir
+              if (!Path.Exists(Path.Combine("Data", "users.csv")))
+              {
+                if (!Path.Exists("Data"))
+                {
+                  Directory.CreateDirectory("Data");
+                }
+                File.Create(Path.Combine("Data", "users.csv")).Close();
+              }
+
+              string[] users_string_from_file = File.ReadAllLines(Path.Combine("Data", "users.csv"));
+
+              foreach (string user in users_string_from_file)
+              {
+                string[] split_user_data = user.Split(';');
+                users.Add(new User(split_user_data[0], split_user_data[1], split_user_data[2]));
+              }
+
+              File.AppendAllText(Path.Combine("Data", "users.csv"), $"{user_username};{user_email};{user_password}" + Environment.NewLine);
+              // Call FileWrite method to add user to text file
+              //FileFunction.FileWrite($"{user_username};{user_email};{user_password}", "u");
+
+              foreach (User user in users)
+              {
+                if (user.TryLogin(user_email, user_password))
+                {
+                  user_logged_in = user;
+                  break;
+                }
+              }
+            }
 
 
 
 
-        }
+          }
 
       }
       menu_choice = EMenu.Main;
@@ -141,13 +189,27 @@ while (is_running)
     //Inventory menu. Displays items currently owned by the current user.
     case EMenu.Inventory:
     {
-      foreach (Item item in items)
-      {
-        if (user_logged_in.Email == item.Owner)
+        if (File.Exists(Path.Combine("Data", "items.csv")))
         {
-          Console.WriteLine(item.Name);
+          //Counter for items
+          int item_count = 0;
+          foreach (Item item in items)
+          {
+            if (user_logged_in.Email == item.Owner)
+            {
+              Console.WriteLine(item.Name);
+              item_count++;
+            }
+          }
         }
-      }
+        
+        if (!File.Exists(Path.Combine("Data", "items.csv")))
+        {
+          Console.WriteLine("You have no items");
+          Console.ReadLine();
+        }
+        
+        
       Console.WriteLine("\nPress enter to return to main menu...");
       Console.ReadLine();
       menu_choice = EMenu.Main;
@@ -176,8 +238,10 @@ while (is_running)
       //check user_menu_choice input and add, reenter or exit to main
       if (user_menu_choice == null | user_menu_choice == "")
       {
-        // Call FileWrite method to add item to text file
-        FileFunction.FileWrite($"{user_item_name};{user_item_description}", "i");
+          // Call FileWrite method to add item to text file
+          //FileFunction.FileWrite($"{user_item_name};{user_item_description}", "i");
+
+        File.AppendAllText(Path.Combine("Data", "items.csv"), $"{user_item_name};{user_item_description};{user_logged_in.Email}" + Environment.NewLine);
         Console.WriteLine("Press enter to return to main menu");
         Console.ReadLine();
         menu_choice = EMenu.Main;
@@ -209,15 +273,17 @@ while (is_running)
     break;
     //Hidden test menu
     case EMenu.Test:
-    {
+      {
       //Below is only for tests
       Console.WriteLine("Sooooo, you need to test stuff?\n\n");
 
-      FileFunction.FileRead("u");
 
+
+      Console.WriteLine("Press enter to return to main menu...");
       Console.ReadLine();
+      menu_choice = EMenu.Main;
 
-    }
+      }
     break;
     //Exit menu
     case EMenu.Exit:

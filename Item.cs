@@ -9,7 +9,7 @@ public class Item
   public string Owner;
 
 
-  public Item(string name, string owner, string description)
+  public Item(string name, string description, string owner)
   {
     Name = name;
     Owner = owner;

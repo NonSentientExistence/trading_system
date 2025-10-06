@@ -28,7 +28,7 @@ if (!File.Exists(Path.Combine("Data", "trades.csv")))
 //Reads from user file and assign each line as an index in array.
 string[] users_string_from_file = File.ReadAllLines(Path.Combine("Data", "users.csv"));
 
-//if array from file is empty, return no user.
+//Check if array from read file users is empty.If not, populate users list with data from file.
 if (users_string_from_file != null | users_string_from_file.Length != 0)
   foreach (string user in users_string_from_file)
   {
@@ -36,7 +36,7 @@ if (users_string_from_file != null | users_string_from_file.Length != 0)
     users.Add(new User(split_user_data[0], split_user_data[1], split_user_data[2]));
   }
 
-//create variable for while loop
+//Declare and assign variable for while loop
 bool is_running = true;
 
 // define and set the variable for which menu to use and user_logged_in to false default.
@@ -56,10 +56,9 @@ while (is_running)
     //main menu and default when loading program
     case EMenu.Main:
       {
-        //Just for a pause in the main menu. Might remove later
-        Console.WriteLine("Welcome to the main menu!");
-        Console.ReadLine();
+        Console.WriteLine("Welcome to the Trading system™!\n");
 
+        //Check if user is logged in. Redirects to login if not, otherwise main menu.
         if (user_logged_in == null)
         {
           menu_choice = EMenu.Login;
@@ -67,15 +66,15 @@ while (is_running)
         if (user_logged_in != null)
         {
           //Write line for menu choices on main menu
-          Console.WriteLine("Menu: \n\n1. Check Inventory \n2. Add Item \n3. New trade \n4. Pending trades \n5. Trade history \n6. Log out");
-          //Sets user chosen input as user_menu choice. Switch to set menu_choice to send user to correct menu
+          Console.WriteLine("== Menu == \n\n1. Check Inventory \n2. Add Item \n3. New trade \n4. Pending trades \n5. Trade history \n6. Log out");
+          //Sets user chosen input as user_menu choice. Switch to set menu_choice to send user to correct sub menu
           user_menu_choice = Console.ReadLine();
           switch (user_menu_choice) { case "1": { menu_choice = EMenu.Inventory; } break; case "2": { menu_choice = EMenu.NewItem; } break; case "3": { menu_choice = EMenu.NewTrade; } break; case "6": { menu_choice = EMenu.Logout; } break; case "9": { menu_choice = EMenu.Test; } break; }
         }
       }
       break;
 
-    // Login menu, if user not logged in then menu_choice will be set to EMenu.Login
+    // Login menu, user will be redirected here if !not_logged_in in main menu
     case EMenu.Login:
       {
         Console.WriteLine("== Login Menu ==");
@@ -84,7 +83,7 @@ while (is_running)
         Console.WriteLine("3. Populate system with test data");
         user_menu_choice = Console.ReadLine();
 
-        //Login, Check if user_menu_choice is null or empty, true then proceed to login
+        //Login, Check user_menu_choice, proceed to login, reg or populate test data
         if (user_menu_choice == "1")
         {
           Console.WriteLine("Please enter your email address and password to login!");
@@ -117,6 +116,8 @@ while (is_running)
       }
       break;
 
+      //Menu for logout, ask user for confirmation. If true, set user_logged_in to null and meny to login. 
+      //Confirms logout. Otherwise, return to main menu.
     case EMenu.Logout:
       {
         Console.WriteLine("Enter q to log out, any other key to return to main menu.");
@@ -127,6 +128,10 @@ while (is_running)
           menu_choice = EMenu.Login;
           Console.WriteLine("You have been logged out. Press enter to return to login menu");
           Console.ReadLine();
+        }
+        else
+        {
+          menu_choice = EMenu.Main;
         }
 
       }
@@ -156,16 +161,8 @@ while (is_running)
         {
           //Writes user data to user file
           File.AppendAllText(Path.Combine("Data", "users.csv"), $"{user_username};{user_email};{user_password}" + Environment.NewLine);
-          //reads from users file, adds all lines to array
-          users_string_from_file = File.ReadAllLines(Path.Combine("Data", "users.csv"));
-          //clears users list
-          users.Clear();
-          //Loops though array and populates user list again
-          foreach (string user in users_string_from_file)
-          {
-            string[] split_user_data = user.Split(';');
-            users.Add(new User(split_user_data[0], split_user_data[1], split_user_data[2]));
-          }
+          // Adds user to users list
+          users.Add(new User(user_username, user_email, user_password));
           //loops through users for login of registerd user
           foreach (User user in users)
           {

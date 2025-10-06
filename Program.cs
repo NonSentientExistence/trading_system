@@ -25,16 +25,31 @@ if (!File.Exists(Path.Combine("Data", "trades.csv")))
   File.Create(Path.Combine("Data", "trades.csv")).Close();
 }
 
-//Reads from user file and assign each line as an index in array.
+//Reads from users file and assign each line as an index in array.
 string[] users_string_from_file = File.ReadAllLines(Path.Combine("Data", "users.csv"));
 
 //Check if array from read file users is empty.If not, populate users list with data from file.
 if (users_string_from_file != null | users_string_from_file.Length != 0)
+{
   foreach (string user in users_string_from_file)
   {
     string[] split_user_data = user.Split(';');
     users.Add(new User(split_user_data[0], split_user_data[1], split_user_data[2]));
   }
+}
+
+//Reads from items file and assign each line as an index in array.
+string[] items_string_from_file = File.ReadAllLines(Path.Combine("Data", "items.csv"));
+
+//Clears Item list and loops through array and adds them to item list
+if (items_string_from_file != null | items_string_from_file.Length != 0)
+{
+  foreach (string item in items_string_from_file)
+  {
+    string[] split_item_data = item.Split(';');
+    items.Add(new Item(split_item_data[0], split_item_data[1], split_item_data[2]));
+  }
+}
 
 //Declare and assign variable for while loop
 bool is_running = true;
@@ -91,20 +106,20 @@ while (is_running)
           string user_email = Console.ReadLine();
           Console.WriteLine("Password: ");
           string user_password = Console.ReadLine();
-            
+          //Loops as users, if password and email matches for one of them set that as user_logged_in
           foreach (User user in users)
           {
-              if (user.TryLogin(user_email, user_password))
-              {
-                user_logged_in = user;
-                break;
-              }
+            if (user.TryLogin(user_email, user_password))
+            {
+              user_logged_in = user;
+              break;
+            }
           }
           menu_choice = EMenu.Main;
         }
 
         //Check for register menu choice
-        if(user_menu_choice == "2")
+        if (user_menu_choice == "2")
         {
           menu_choice = EMenu.Register;
         }
@@ -116,8 +131,8 @@ while (is_running)
       }
       break;
 
-      //Menu for logout, ask user for confirmation. If true, set user_logged_in to null and meny to login. 
-      //Confirms logout. Otherwise, return to main menu.
+    //Menu for logout, ask user for confirmation. If true, set user_logged_in to null and meny to login. 
+    //Confirms logout. Otherwise, return to main menu.
     case EMenu.Logout:
       {
         Console.WriteLine("Enter q to log out, any other key to return to main menu.");
@@ -172,6 +187,7 @@ while (is_running)
               break;
             }
           }
+          //Informs user that they have been logged in before redirecting
           Console.WriteLine("You've been registered and logged in, press enter to proceed to main menu...");
           Console.ReadLine();
         }
@@ -183,20 +199,6 @@ while (is_running)
     //Inventory menu. Displays items currently owned by the current user.
     case EMenu.Inventory:
       {
-        //Reads all lines from item file and assigns to array
-
-        string[] items_string_from_file = File.ReadAllLines(Path.Combine("Data", "items.csv"));
-
-        //Clears Item list and loops through array and adds them to item list
-        items.Clear();
-
-
-        foreach (string item in items_string_from_file)
-        {
-          string[] split_item_data = item.Split(';');
-          items.Add(new Item(split_item_data[0], split_item_data[1], split_item_data[2]));
-        }
-
         //Counter for items owned by current user.
         int item_count = 0;
         //loops item list and writes all items where owner is the current user.
@@ -238,6 +240,7 @@ while (is_running)
         if (user_menu_choice == null | user_menu_choice == "")
         {
           File.AppendAllText(Path.Combine("Data", "items.csv"), $"{user_item_name};{user_item_description};{user_logged_in.Email}" + Environment.NewLine);
+          items.Add(new Item(user_item_name, user_item_description, user_logged_in.Email));
           Console.WriteLine("Press enter to return to main menu");
           Console.ReadLine();
           menu_choice = EMenu.Main;
@@ -257,16 +260,75 @@ while (is_running)
     //Menu for putting an item up for trade
     case EMenu.NewTrade:
       {
-        int i = 1;
+        Console.WriteLine("== New Trade ==");
+        Console.WriteLine("1. Browse other users items to trade for");
+        Console.WriteLine("2. Put your items up for trade");
+        Console.WriteLine("3. Back to main menu");
+        user_menu_choice = Console.ReadLine();
+
+        if (user_menu_choice == "1")
+        {
+          menu_choice = EMenu.BrowseItems;
+        }
+
+        if (user_menu_choice == "2")
+        {
+
+        }
+
+        if (user_menu_choice == "3")
+        { 
+
+        }
+        //Started code for putting up a trade for the logged in user with currently owned items.
+        /*
+              int i = 1;
         Console.WriteLine("What would you like to trade?");
         foreach (Item item in items)
         {
           if (user_logged_in.Email == item.Owner)
             Console.WriteLine($"Name: item.Name \n Description: item.description");
         }
-
+        */
       }
       break;
+    //Browse for other users items and choose user to trade from
+    case EMenu.BrowseItems:
+      {
+        Console.WriteLine("== Available items from other users ==\n");
+        int u = 1;
+        //loops through users list and writes each item the user owns from items list if they own items.
+        foreach (User user_items in users)
+        {
+          //Currently logged in user will be skipped
+          if (user_items.Email == user_logged_in.Email)
+            continue;
+          //Bool for checking if user has items and print their name once.
+          bool user_has_item = false;
+          
+
+          //Check if they have items, print name and then set user_has_item to skip name print.
+          foreach (Item items_user in items)
+          {
+            if (user_items.Email == items_user.Owner)
+            {
+              if (!user_has_item)
+              {
+                Console.WriteLine($"\n{u}. {user_items.Username} :");
+                user_has_item = true;
+                u++;
+              }
+              Console.WriteLine($"Name: {items_user.Name}");
+              Console.WriteLine($"Description: {items_user.Description}");
+            }
+          }
+        }
+
+        Console.ReadLine();
+        menu_choice = EMenu.Main;
+      }
+      break;  
+
     //Hidden test menu
     case EMenu.Test:
       {

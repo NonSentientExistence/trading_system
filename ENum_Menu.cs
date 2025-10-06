@@ -11,6 +11,7 @@ public enum EMenu
   User,
   NewItem,
   Inventory,
+  BrowseItems,
   NewTrade,
   ViewTrades,
   PendingTrades,
